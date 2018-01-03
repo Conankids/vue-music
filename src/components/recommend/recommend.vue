@@ -14,7 +14,7 @@
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
           <ul>
-            <li v-for="item in discList" class="item">
+            <li @click="selectItem(item)" v-for="item in discList" class="item">
               <div class="icon">
                 <img width="60" height="60" v-lazy="item.imgurl">
               </div>
@@ -30,63 +30,76 @@
         <loading></loading>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import {
-  getRecommend,
-  getDiscList
-} from 'api/recommend'
-import {
-  ERR_OK
-} from 'api/config'
-import Slider from 'base/slider/slider'
-import Scroll from 'base/scroll/scroll'
-import Loading from 'base/loading/loading'
-export default {
-  data: function() {
-    return {
-      recommends: [],
-      discList: []
-    }
-  },
-  created() {
-    this._getRecommend()
+  import { getRecommend, getDiscList } from 'api/recommend'
+  import { ERR_OK } from 'api/config'
+  import Slider from 'base/slider/slider'
+  import Scroll from 'base/scroll/scroll'
+  import Loading from 'base/loading/loading'
+  import { playListMixins } from 'common/js/mixins'
+  import { mapMutations } from 'vuex'
 
-    this._getDiscList()
-  },
-  methods: {
-    _getRecommend() {
-      getRecommend().then((res) => {
-        if (res.code === ERR_OK) {
-          this.recommends = res.data.slider
-        }
-      })
-    },
-    _getDiscList() {
-      getDiscList().then((res) => {
-        if (res.code === ERR_OK) {
-          this.discList = res.data.list
-        }
-      })
-    },
-    loadImg() {
-      if (!this.checkedLoad) {
-        this.checkedLoad = true
-        this.$refs.scroll.refresh()
+  export default {
+    mixins: [playListMixins],
+    data: function () {
+      return {
+        recommends: [],
+        discList: []
       }
+    },
+    created () {
+      this._getRecommend()
+      this._getDiscList()
+    },
+    methods: {
+      handlePlayList (playList) {
+        const bottom = playList.length > 0 ? '60px' : ''
+        this.$refs.recommend.style.bottom = bottom
+        this.$refs.scroll.refresh()
+      },
+      selectItem (item) {
+        this.$router.push({
+          path: `/recommend/${item.dissid}`
+        })
+        this.setDist(item)
+      },
+      _getRecommend () {
+        getRecommend().then((res) => {
+          if (res.code === ERR_OK) {
+            this.recommends = res.data.slider
+          }
+        })
+      },
+      _getDiscList () {
+        getDiscList().then((res) => {
+          if (res.code === ERR_OK) {
+            this.discList = res.data.list
+          }
+        })
+      },
+      loadImg () {
+        if (!this.checkedLoad) {
+          this.checkedLoad = true
+          this.$refs.scroll.refresh()
+        }
+      },
+      ...mapMutations({
+        setDist: 'SET_DISC'
+      })
+    },
+    components: {
+      Slider,
+      Scroll,
+      Loading
     }
-  },
-  components: {
-    Slider,
-    Scroll,
-    Loading
   }
-}
 </script>
 
-<style lang="stylus" rel="stylusheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
 
   .recommend

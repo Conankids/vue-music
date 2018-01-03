@@ -40,11 +40,15 @@ import {
 import {
   mapActions
 } from 'vuex'
+import {
+  playListMixins
+} from 'common/js/mixins'
 
 const RESERVED_HEIGHT = 40
 const transform = prefixStyle('transform')
 const backdrop = prefixStyle('backdrop')
 export default {
+  mixins: [playListMixins],
   props: {
     title: {
       type: String,
@@ -79,6 +83,11 @@ export default {
     this.$refs.list.$el.style.top = `${this.bgImgHeight}px`
   },
   methods: {
+    handlePlayList(playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh()
+    },
     selectItem(item, index) {
       this.selectPlay({
         list: this.songs,

@@ -72,7 +72,7 @@ export default {
 }
 </script>
 
-<style lang="stylus" rel="stylusheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   .slide-enter-active, .slide-leave-active
     transition: all 0.3s

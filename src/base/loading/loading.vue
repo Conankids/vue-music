@@ -16,7 +16,7 @@ export default {
 }
 </script>
 
-<style scoped lang="stylus" rel="stylusheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
 
     .loading

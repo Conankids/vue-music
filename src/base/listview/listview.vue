@@ -99,6 +99,9 @@ export default {
     scroll(pos) {
       this.scrollY = pos.y
     },
+    refresh() {
+      this.$refs.listview.refresh()
+    },
     _calculateHeight() {
       // 获取每个歌手列表的高度
       this.listHeight = []
@@ -167,7 +170,7 @@ export default {
 }
 </script>
 
-<style scoped lang="stylus" rel="stylusheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
 
   .listview
